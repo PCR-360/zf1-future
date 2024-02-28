@@ -9,10 +9,6 @@
     ],
     "homepage": "http://framework.zend.com/",
     "license": "BSD-3-Clause",
-    "repositories": [{
-        "type": "composer",
-        "url": "https://packages.pcr.com"
-    }],
     "require": {
         "php": ">=7.1",
         "symfony/polyfill-php81": "^1.24",
