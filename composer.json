@@ -9,10 +9,6 @@
     ],
     "homepage": "https://github.com/Shardj/zf1-future/",
     "license": "BSD-3-Clause",
-    "repositories": [{
-        "type": "composer",
-        "url": "https://packages.pcr.com"
-    }],
     "require": {
         "php": ">=7.1",
         "symfony/polyfill-ctype": "^1.30",
