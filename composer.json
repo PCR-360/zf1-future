@@ -1,5 +1,5 @@
 {
-    "name": "shardj/zf1-future",
+    "name": "pcr/zf1-future",
     "description": "Zend Framework 1. The aim is to keep ZF1 working with the latest PHP versions",
     "type": "library",
     "version": "1.24.0",
@@ -44,7 +44,8 @@
         "exclude": ["/demos", "/documentation", "/tests"]
     },
     "replace": {
-        "zendframework/zendframework1": ">=1.12.20"
+        "zendframework/zendframework1": ">=1.12.20",
+        "shardj/zf1-future": "1.24.0"
     },
     "scripts": {
         "lint": "parallel-lint --exclude vendor --exclude tests/Zend/Loader/_files/ParseError.php .",
