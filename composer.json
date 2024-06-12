@@ -2,7 +2,7 @@
     "name": "pcr/zf1-future",
     "description": "Zend Framework 1. The aim is to keep ZF1 working with the latest PHP versions",
     "type": "library",
-    "version": "1.24.0",
+    "version": "24.2.0",
     "keywords": [
         "framework",
         "zf1"
@@ -31,7 +31,8 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.12.x-dev"
+            "dev-master": "1.12.x-dev",
+            "dev-PCR360-11213-PHP8.3-support": "24.2.x-dev"
         }
     },
     "require-dev": {
