@@ -54,11 +54,5 @@
             "Composer\\Config::disableProcessTimeout",
             "phpunit --bootstrap tests/TestHelper.php tests/Zend/AllTests.php"
         ]
-    },
-    "autoload-dev": {
-        "psr-0": {
-            "Zend_": "tests/",
-            "resources_": "tests/"
-        }
     }
 }
