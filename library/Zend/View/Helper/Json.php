@@ -73,7 +73,8 @@ class Zend_View_Helper_Json extends Zend_View_Helper_Abstract
         }
 
         if ($encodeData) {
-            $data = Zend_Json::encode($data, null, $options);
+            // Zend_Json::encode uses dynamic property assignment which is deprecated.
+            $data = json_encode($data);
         }
         if (!$keepLayouts) {
             require_once 'Zend/Layout.php';
