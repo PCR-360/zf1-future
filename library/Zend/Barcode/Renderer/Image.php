@@ -345,8 +345,11 @@ class Zend_Barcode_Renderer_Image extends Zend_Barcode_Renderer_RendererAbstract
     public function render()
     {
         $this->draw();
-        // PCR360-11102: The Content-Type header is breaking HTML barcodes, causing the iframe content to render with
-        // the URL for the report as the src
+        /**
+         * @see PCR360-11102
+         * The Content-Type header is breaking HTML barcodes, causing the iframe content to render
+         * with the URL for the report as the src
+         */
         // header("Content-Type: image/" . $this->_imageType);
         $functionName = 'image' . $this->_imageType;
         call_user_func($functionName, $this->_resource);
