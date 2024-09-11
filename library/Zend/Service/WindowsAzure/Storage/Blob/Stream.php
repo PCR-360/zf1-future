@@ -145,7 +145,11 @@ class Zend_Service_WindowsAzure_Storage_Blob_Stream
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         $this->_fileName = $path;
-        $this->_temporaryFileName = tempnam(sys_get_temp_dir(), 'azure');
+        // Only use sys_get_temp_dir() if APP_TEMP_DIR is undefined
+        $this->_temporaryFileName = tempnam(
+            defined('APP_TEMP_DIR') ? APP_TEMP_DIR : sys_get_temp_dir(),
+            'azure'
+        );
 
         // Check the file can be opened
         $fh = @fopen($this->_temporaryFileName, $mode);

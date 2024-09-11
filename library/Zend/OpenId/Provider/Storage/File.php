@@ -58,7 +58,8 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
             if (empty($tmp)) {
                 $tmp = getenv('TEMP');
                 if (empty($tmp)) {
-                    $tmp = "/tmp";
+                    // Only use /tmp if APP_TEMP_DIR is undefined
+                    $tmp = defined('APP_TEMP_DIR') ? APP_TEMP_DIR : '/tmp';
                 }
             }
             $user = get_current_user();

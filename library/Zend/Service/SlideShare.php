@@ -196,7 +196,8 @@ class Zend_Service_SlideShare
                     'lifetime'                => 43200,
                     'automatic_serialization' => true
                 ],
-                ['cache_dir' => '/tmp']
+                // Only use /tmp if APP_TEMP_DIR is undefined
+                ['cache_dir' => defined('APP_TEMP_DIR') ? APP_TEMP_DIR : '/tmp']
             );
 
             $this->setCacheObject($cache);
