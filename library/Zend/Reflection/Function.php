@@ -78,9 +78,11 @@ class Zend_Reflection_Function extends ReflectionFunction
      */
     public function getContents($includeDocblock = true)
     {
+        // array_splice first argument is a reference variable
+        $arr = file($this->getFileName());
         return implode("\n",
             array_splice(
-                file($this->getFileName()),
+                $arr,
                 $this->getStartLine($includeDocblock),
                 ($this->getEndLine() - $this->getStartLine()),
                 true

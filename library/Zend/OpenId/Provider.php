@@ -162,7 +162,7 @@ class Zend_OpenId_Provider
         if (!Zend_OpenId::normalize($id) || empty($id)) {
             return false;
         }
-        return $this->_storage->addUser($id, md5($id.$password));
+        return $this->_storage->addUser($id, hash('sha256', $id.$password));
     }
 
     /**
@@ -191,7 +191,7 @@ class Zend_OpenId_Provider
         if (!Zend_OpenId::normalize($id)) {
             return false;
         }
-        if (!$this->_storage->checkUser($id, md5($id.$password))) {
+        if (!$this->_storage->checkUser($id, hash('sha256', $id.$password))) {
             return false;
         }
         $this->_user->setLoggedInUser($id);

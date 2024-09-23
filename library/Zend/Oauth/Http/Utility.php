@@ -189,6 +189,7 @@ class Zend_Oauth_Http_Utility
      */
     public function generateNonce()
     {
+        // md5() usage is safe -- only used to create unique identifier.
         return md5(uniqid(rand(), true));
     }
 

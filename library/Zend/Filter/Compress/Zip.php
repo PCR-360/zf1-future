@@ -233,6 +233,10 @@ class Zend_Filter_Compress_Zip extends Zend_Filter_Compress_CompressAbstract
             throw new Zend_Filter_Exception($this->_errorString($res));
         }
 
+        /*
+         * Code analysis may flag this as "Arbitrary File Write via Archive Extraction (Zip Slip)"
+         * This is a false positive. The $target is not unsanitized/from user input.
+         */
         $res = @$zip->extractTo($target);
         if ($res !== true) {
             require_once 'Zend/Filter/Exception.php';
