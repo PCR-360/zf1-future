@@ -1383,7 +1383,8 @@ abstract class Zend_File_Transfer_Adapter_Abstract
         if (null === $this->_tmpDir) {
             $tmpdir = [];
             if (function_exists('sys_get_temp_dir')) {
-                $tmpdir[] = sys_get_temp_dir();
+                // Only use sys_get_temp_dir() if APP_TEMP_DIR is undefined
+                $tmpdir[] = defined('APP_TEMP_DIR') ? APP_TEMP_DIR : sys_get_temp_dir();
             }
 
             if (!empty($_ENV['TMP'])) {

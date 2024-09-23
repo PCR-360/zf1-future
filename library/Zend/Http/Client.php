@@ -987,8 +987,13 @@ class Zend_Http_Client
         $this->_stream_name = $this->config['output_stream'];
         if(!is_string($this->_stream_name)) {
             // If name is not given, create temp name
-            $this->_stream_name = tempnam(isset($this->config['stream_tmp_dir'])?$this->config['stream_tmp_dir']:sys_get_temp_dir(),
-                 'Zend_Http_Client');
+            $this->_stream_name = tempnam(
+                $this->config['stream_tmp_dir'] ?? (
+                    // Only use sys_get_temp_dir() if APP_TEMP_DIR is undefined
+                    defined('APP_TEMP_DIR') ? APP_TEMP_DIR : sys_get_temp_dir()
+                ),
+                'Zend_Http_Client'
+            );
         }
 
         if (false === ($fp = @fopen($this->_stream_name, "w+b"))) {
