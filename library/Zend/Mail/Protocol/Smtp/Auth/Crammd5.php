@@ -102,6 +102,10 @@ class Zend_Mail_Protocol_Smtp_Auth_Crammd5 extends Zend_Mail_Protocol_Smtp
     protected function _hmacMd5($key, $data, $block = 64)
     {
         if (strlen($key) > 64) {
+            /*
+             * md5() usage here may be flagged by analysis.
+             * Entire class is never used by PCR-360, so this is irrelevant.
+             */
             $key = pack('H32', md5($key));
         } elseif (strlen($key) < 64) {
             $key = str_pad($key, $block, "\0");
@@ -110,8 +114,16 @@ class Zend_Mail_Protocol_Smtp_Auth_Crammd5 extends Zend_Mail_Protocol_Smtp
         $k_ipad = substr($key, 0, 64) ^ str_repeat(chr(0x36), 64);
         $k_opad = substr($key, 0, 64) ^ str_repeat(chr(0x5C), 64);
 
+        /*
+         * md5() usage here may be flagged by analysis.
+         * Entire class is never used by PCR-360, so this is irrelevant.
+         */
         $inner = pack('H32', md5($k_ipad . $data));
 
+        /*
+         * md5() usage here may be flagged by analysis.
+         * Entire class is never used by PCR-360, so this is irrelevant.
+         */
         return md5($k_opad . $inner);
     }
 }

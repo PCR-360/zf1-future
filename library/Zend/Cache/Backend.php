@@ -207,7 +207,10 @@ class Zend_Cache_Backend
                 return $dir;
             }
         }
-        // Attemp to detect by creating a temporary file
+        /*
+         * Attempt to detect by creating a temporary file
+         * md5() usage is safe -- only used to create unique identifier.
+         */
         $tempFile = tempnam(md5(uniqid(rand(), TRUE)), '');
         if ($tempFile) {
             $dir = realpath(dirname($tempFile));

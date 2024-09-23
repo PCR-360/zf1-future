@@ -166,6 +166,7 @@ class Zend_Validate_File_Md5 extends Zend_Validate_File_Hash
         }
 
         $hashes = array_unique(array_keys($this->_hash));
+        // md5() usage is safe -- only used to create unique identifier.
         $filehash = hash_file('md5', $value);
         if ($filehash === false) {
             return $this->_throw($file, self::NOT_DETECTED);

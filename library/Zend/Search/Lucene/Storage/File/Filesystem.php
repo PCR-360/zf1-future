@@ -86,7 +86,9 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     public function seek($offset, $whence=SEEK_SET)
     {
-        return fseek($this->_fileHandle, $offset, $whence);
+        return is_resource($this->_fileHandle)
+            ? fseek($this->_fileHandle, $offset, $whence)
+            : -1;
     }
 
 
@@ -97,7 +99,9 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     public function tell()
     {
-        return ftell($this->_fileHandle);
+        return is_resource($this->_fileHandle)
+            ? ftell($this->_fileHandle)
+            : false;
     }
 
     /**
@@ -109,7 +113,7 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     public function flush()
     {
-        return fflush($this->_fileHandle);
+        return is_resource($this->_fileHandle) && fflush($this->_fileHandle);
     }
 
     /**
@@ -117,7 +121,7 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     public function close()
     {
-        if ($this->_fileHandle !== null ) {
+        if (is_resource($this->_fileHandle)) {
             @fclose($this->_fileHandle);
             $this->_fileHandle = null;
         }
@@ -130,10 +134,14 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     public function size()
     {
-        $position = ftell($this->_fileHandle);
-        fseek($this->_fileHandle, 0, SEEK_END);
-        $size = ftell($this->_fileHandle);
-        fseek($this->_fileHandle,$position);
+        $size = 0;
+
+        if (is_resource($this->_fileHandle)) {
+            $position = ftell($this->_fileHandle);
+            fseek($this->_fileHandle, 0, SEEK_END);
+            $size = ftell($this->_fileHandle);
+            fseek($this->_fileHandle, $position);
+        }
 
         return $size;
     }
@@ -146,7 +154,7 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     protected function _fread($length=1)
     {
-        if ($length == 0) {
+        if ($length == 0 || !is_resource($this->_fileHandle)) {
             return '';
         }
 
@@ -183,10 +191,12 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     protected function _fwrite($data, $length=null)
     {
-        if ($length === null ) {
-            fwrite($this->_fileHandle, $data);
-        } else {
-            fwrite($this->_fileHandle, $data, $length);
+        if (is_resource($this->_fileHandle)) {
+            if ($length === null) {
+                fwrite($this->_fileHandle, $data);
+            } else {
+                fwrite($this->_fileHandle, $data, $length);
+            }
         }
     }
 
@@ -201,11 +211,14 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     public function lock($lockType, $nonBlockingLock = false)
     {
-        if ($nonBlockingLock) {
-            return flock($this->_fileHandle, $lockType | LOCK_NB);
-        } else {
-            return flock($this->_fileHandle, $lockType);
+        if (is_resource($this->_fileHandle)) {
+            if ($nonBlockingLock) {
+                return flock($this->_fileHandle, $lockType | LOCK_NB);
+            } else {
+                return flock($this->_fileHandle, $lockType);
+            }
         }
+        return false;
     }
 
     /**
@@ -217,7 +230,7 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
      */
     public function unlock()
     {
-        if ($this->_fileHandle !== null ) {
+        if (is_resource($this->_fileHandle)) {
             return flock($this->_fileHandle, LOCK_UN);
         } else {
             return true;

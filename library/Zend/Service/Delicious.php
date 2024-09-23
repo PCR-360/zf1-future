@@ -445,6 +445,7 @@ class Zend_Service_Delicious
      */
     public function getUrlDetails($url)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $parms = ['hash' => md5($url)];
 
         $res = $this->makeRequest(self::JSON_URL, $parms, 'json');
