@@ -315,10 +315,19 @@ class Zend_Ldap_Attribute
                 return $password;
             case self::PASSWORD_HASH_SSHA:
                 $salt    = Zend_Crypt_Math::randBytes(4);
+                /**
+                 * Code analysis will flag this as "Use of Password Hash With Insufficient Computational Effort".
+                 * This is intentional here if SSHA is used.
+                 * A cryptographically sound random number is used for the salt.
+                 */
                 $rawHash = sha1($password . $salt, true) . $salt;
                 $method  = '{SSHA}';
                 break;
             case self::PASSWORD_HASH_SHA:
+                /**
+                 * Code analysis will flag this as "Use of Password Hash With Insufficient Computational Effort".
+                 * This is intentional here if SSA is used.
+                 */
                 $rawHash = sha1($password, true);
                 $method  = '{SHA}';
                 break;

@@ -343,6 +343,7 @@ class Zend_Queue_Adapter_Db extends Zend_Queue_Adapter_AdapterAbstract
         $msg->queue_id = $this->getQueueId($queue->getName());
         $msg->created  = time();
         $msg->body     = $message;
+        // md5() usage is safe -- only used to create unique identifier.
         $msg->md5      = md5($message);
         // $msg->timeout = ??? @TODO
 
@@ -408,7 +409,10 @@ class Zend_Queue_Adapter_Db extends Zend_Queue_Adapter_AdapterAbstract
                       ->limit($maxMessages);
 
                 foreach ($db->fetchAll($query) as $data) {
-                    // setup our changes to the message
+                    /*
+                     * setup our changes to the message
+                     * md5() usage is safe -- only used to create unique identifier.
+                     */
                     $data['handle'] = md5(uniqid(rand(), true));
 
                     $update = [

@@ -161,6 +161,10 @@ class Zend_Cache_Backend_Static
         $file     = rtrim($pathName, '/') . '/' . $fileName . $this->_options['file_extension'];
 
         if (file_exists($file)) {
+            /*
+             * Code analysis may flag this as "Directory Traversal" due to unsanitized input from HTTP headers.
+             * This is a false positive as the directory comes from the options array.
+             */
             return file_get_contents($file);
         }
 

@@ -821,7 +821,10 @@ abstract class Zend_Db_Table_Abstract
                   ? ':'.$dbConfig['host']
                   : null);
 
-            // Define the cache identifier where the metadata are saved
+            /*
+             * Define the cache identifier where the metadata are saved
+             * md5() usage is safe -- only used to create unique identifier.
+             */
             $cacheId = md5( // port:host/dbname:schema.table (based on availabilty)
                     $port . $host . '/'. $dbConfig['dbname'] . ':'
                   . $this->_schema. '.' . $this->_name

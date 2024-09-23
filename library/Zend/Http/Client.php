@@ -1301,7 +1301,10 @@ class Zend_Http_Client
         if (count($this->paramsPost) > 0 || count($this->files) > 0) {
             switch($this->enctype) {
                 case self::ENC_FORMDATA:
-                    // Encode body as multipart/form-data
+                    /*
+                     * Encode body as multipart/form-data
+                     * md5() usage is safe -- only used to create unique identifier.
+                     */
                     $boundary = '---ZENDHTTPCLIENT-' . md5(microtime());
                     $this->setHeaders(self::CONTENT_TYPE, self::ENC_FORMDATA . "; boundary={$boundary}");
 

@@ -1124,6 +1124,7 @@ class Zend_Mail extends Zend_Mime_Message
             $hostName = php_uname('n');
         }
 
+        // sha1() usage is safe -- only used to create unique identifier.
         return sha1($time . $user . $rand . $recipient) . '@' . $hostName;
     }
 

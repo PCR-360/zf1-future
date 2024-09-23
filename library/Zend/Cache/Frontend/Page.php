@@ -349,6 +349,7 @@ class Zend_Cache_Frontend_Page extends Zend_Cache_Core
             }
             $tmp = $tmp . $tmp2;
         }
+        // md5() usage is safe -- only used to create unique identifier.
         return md5($tmp);
     }
 

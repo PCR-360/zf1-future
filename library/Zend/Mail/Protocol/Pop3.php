@@ -271,6 +271,7 @@ class Zend_Mail_Protocol_Pop3
     {
         if ($tryApop && $this->_timestamp) {
             try {
+                // POP3 aPOP requires md5()
                 $this->request("APOP $user " . md5($this->_timestamp . $password));
                 return;
             } catch (Zend_Mail_Protocol_Exception $e) {

@@ -375,7 +375,7 @@ class Zend_Filter_Encrypt_Openssl implements Zend_Filter_Encrypt_Interface
                 }
 
                 ++$count;
-                $fingerprints[$count] = md5($details['key']);
+                $fingerprints[$count] = hash('sha256', $details['key']);
             }
         }
 
@@ -444,9 +444,9 @@ class Zend_Filter_Encrypt_Openssl implements Zend_Filter_Encrypt_Interface
         if ($this->_package) {
             $details = openssl_pkey_get_details($keys);
             if ($details !== false) {
-                $fingerprint = md5($details['key']);
+                $fingerprint = hash('sha256', $details['key']);
             } else {
-                $fingerprint = md5("ZendFramework");
+                $fingerprint = hash('sha256', 'ZendFramework');
             }
 
             $count = unpack('ncount', $value);

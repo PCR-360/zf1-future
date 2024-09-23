@@ -337,6 +337,10 @@ class Zend_Service_SlideShare
         $params = [
             'api_key'         => $this->getApiKey(),
             'ts'              => $timestamp,
+            /*
+             * Code analysis may flag this as "Use of Password Hash With Insufficient Computational Effort"
+             * This is dictated by the slideshare.net API and unused by PCR-360.
+             */
             'hash'            => sha1($this->getSharedSecret() . $timestamp),
             'username'        => $this->getUserName(),
             'password'        => $this->getPassword(),
@@ -424,11 +428,16 @@ class Zend_Service_SlideShare
         $params = [
             'api_key'      => $this->getApiKey(),
             'ts'           => $timestamp,
+            /*
+             * Code analysis may flag this as "Use of Password Hash With Insufficient Computational Effort"
+             * This is dictated by the slideshare.net API and unused by PCR-360.
+             */
             'hash'         => sha1($this->getSharedSecret() . $timestamp),
             'slideshow_id' => $ssId
         ];
 
         $cache    = $this->getCacheObject();
+        // md5() usage is safe -- only used to create unique identifier.
         $cacheKey = md5("__zendslideshare_cache_$ssId");
 
         if (!$retval = $cache->load($cacheKey)) {
@@ -568,6 +577,10 @@ class Zend_Service_SlideShare
         $params = [
             'api_key' => $this->getApiKey(),
             'ts'      => $timestamp,
+            /*
+             * Code analysis may flag this as "Use of Password Hash With Insufficient Computational Effort"
+             * This is dictated by the slideshare.net API and unused by PCR-360.
+             */
             'hash'    => sha1($this->getSharedSecret() . $timestamp),
             $key      => $value
         ];
@@ -581,6 +594,7 @@ class Zend_Service_SlideShare
         }
 
         $cache    = $this->getCacheObject();
+        // md5() usage is safe -- only used to create unique identifier.
         $cacheKey = md5($key . $value . $offset . $limit);
 
         if (!$retval = $cache->load($cacheKey)) {
