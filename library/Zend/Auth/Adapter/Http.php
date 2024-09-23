@@ -114,15 +114,14 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
     protected $_useOpaque;
 
     /**
-     * List of the supported digest algorithms. I want to support both MD5 and
-     * MD5-sess, but MD5-sess won't make it into the first version.
+     * List of the supported digest algorithms.
      *
      * @var array
      */
-    protected $_supportedAlgos = ['MD5'];
+    protected $_supportedAlgos = ['SHA-256'];
 
     /**
-     * The actual algorithm to use. Defaults to MD5
+     * The actual algorithm to use. Defaults to SHA-256
      *
      * @var string
      */
@@ -160,7 +159,7 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
      *    'digest_domains' => <string> Space-delimited list of URIs
      *    'nonce_timeout' => <int>
      *    'use_opaque' => <bool> Whether to send the opaque value in the header
-     *    'alogrithm' => <string> See $_supportedAlgos. Default: MD5
+     *    'alogrithm' => <string> See $_supportedAlgos. Default: SHA-256
      *    'proxy_auth' => <bool> Whether to do authentication as a Proxy
      * @throws Zend_Auth_Adapter_Exception
      */
@@ -250,7 +249,7 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
             if (isset($config['algorithm']) && in_array($config['algorithm'], $this->_supportedAlgos)) {
                 $this->_algo = $config['algorithm'];
             } else {
-                $this->_algo = 'MD5';
+                $this->_algo = 'SHA-256';
             }
         }
 
@@ -603,13 +602,6 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
             return $this->_challengeClient();
         }
 
-        // If MD5-sess is used, a1 value is made of the user's password
-        // hash with the server and client nonce appended, separated by
-        // colons.
-        if ($this->_algo == 'MD5-sess') {
-            $ha1 = hash('md5', $ha1 . ':' . $data['nonce'] . ':' . $data['cnonce']);
-        }
-
         // Calculate h(a2). The value of this hash depends on the qop
         // option selected by the client and the supported hash functions
         switch ($data['qop']) {
@@ -628,13 +620,13 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
         }
         // Using hash() should make parameterizing the hash algorithm
         // easier
-        $ha2 = hash('md5', $a2);
+        $ha2 = hash('sha256', $a2);
 
 
         // Calculate the server's version of the request-digest. This must
         // match $data['response']. See RFC 2617, section 3.2.2.1
         $message = $data['nonce'] . ':' . $data['nc'] . ':' . $data['cnonce'] . ':' . $data['qop'] . ':' . $ha2;
-        $digest  = hash('md5', $ha1 . ':' . $message);
+        $digest  = hash('sha256', $ha1 . ':' . $message);
 
         // If our digest matches the client's let them in, otherwise return
         // a 401 code and exit to prevent access to the protected resource.
@@ -665,7 +657,7 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
         $timeout = ceil(time() / $this->_nonceTimeout) * $this->_nonceTimeout;
 
         return hash(
-            'md5',
+            'sha256',
             $timeout . ':' . $this->_request->getServer('HTTP_USER_AGENT') . ':' . __CLASS__
         );
     }
@@ -684,7 +676,7 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
      */
     protected function _calcOpaque()
     {
-        return hash('md5', 'Opaque Data:' . __CLASS__);
+        return hash('sha256', 'Opaque Data:' . __CLASS__);
     }
 
     /**
@@ -776,7 +768,7 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
                  && in_array($temp[1], $this->_supportedAlgos)) {
             $data['algorithm'] = $temp[1];
         } else {
-            $data['algorithm'] = 'MD5';  // = $this->_algo; ?
+            $data['algorithm'] = 'SHA-256';  // = $this->_algo; ?
         }
         $temp = null;
 

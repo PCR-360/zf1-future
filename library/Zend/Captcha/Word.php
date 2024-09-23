@@ -357,6 +357,7 @@ abstract class Zend_Captcha_Word extends Zend_Captcha_Base
 
     protected function _generateRandomId()
     {
+        // md5() usage is safe -- only used to create unique identifier.
         return md5(Zend_Crypt_Math::randBytes(32));
     }
 

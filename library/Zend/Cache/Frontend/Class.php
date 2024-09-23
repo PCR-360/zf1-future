@@ -270,6 +270,7 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
      */
     public function makeId($name, array $args = [])
     {
+        // md5() usage is safe -- only used to create unique identifier.
         return md5($this->_cachedEntityLabel . '__' . $name . '__' . serialize($args));
     }
 }

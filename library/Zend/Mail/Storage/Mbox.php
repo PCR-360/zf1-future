@@ -250,6 +250,10 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
     protected function _isMboxFile($file, $fileIsString = true)
     {
         if ($fileIsString) {
+            /*
+             * Code analysis may flag this as "Path Traversal"
+             * Irrelevant -- this class is unused and mbox is unsupported by PCR-360.
+             */
             $file = @fopen($file, 'r');
             if (!$file) {
                 return false;
