@@ -37,6 +37,7 @@ require_once 'Zend/View/Helper/Abstract.php';
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
+#[\AllowDynamicProperties]
 class Zend_View_Helper_Json extends Zend_View_Helper_Abstract
 {
     /**
@@ -73,8 +74,11 @@ class Zend_View_Helper_Json extends Zend_View_Helper_Abstract
         }
 
         if ($encodeData) {
-            // Zend_Json::encode uses dynamic property assignment which is deprecated.
-            $data = json_encode($data);
+            /* Zend_Json is required because of the enableJsonExprFinder option that finds Zend_Json_Expr objects
+             * Because this results in deprecated dynamic property assignment warnings, #[\AllowDynamicProperties] has
+             * been specified for this class
+             */
+            $data = Zend_Json::encode($data, null, $options);
         }
         if (!$keepLayouts) {
             require_once 'Zend/Layout.php';
