@@ -171,7 +171,6 @@ class Zend_Cache_Backend
      */
     public function getTmpDir()
     {
-        $tmpdir = [];
         foreach ([$_ENV, $_SERVER] as $tab) {
             foreach (['TMPDIR', 'TEMP', 'TMP', 'windir', 'SystemRoot'] as $key) {
                 if (isset($tab[$key]) && is_string($tab[$key])) {
@@ -193,13 +192,25 @@ class Zend_Cache_Backend
                 return $dir;
             }
         }
+
+        // If APP_TMP_DIR is defined, use that and avoid permissions issues.
+        if (defined('APP_TEMP_DIR')) {
+            $dir = APP_TEMP_DIR;
+            if ($this->_isGoodTmpDir($dir)) {
+                return $dir;
+            }
+        }
+
         if (function_exists('sys_get_temp_dir')) {
             $dir = sys_get_temp_dir();
             if ($this->_isGoodTmpDir($dir)) {
                 return $dir;
             }
         }
-        // Attemp to detect by creating a temporary file
+        /*
+         * Attempt to detect by creating a temporary file
+         * md5() usage is safe -- only used to create unique identifier.
+         */
         $tempFile = tempnam(md5(uniqid(rand(), TRUE)), '');
         if ($tempFile) {
             $dir = realpath(dirname($tempFile));

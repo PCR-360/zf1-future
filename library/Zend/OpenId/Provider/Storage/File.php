@@ -58,7 +58,8 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
             if (empty($tmp)) {
                 $tmp = getenv('TEMP');
                 if (empty($tmp)) {
-                    $tmp = "/tmp";
+                    // Only use /tmp if APP_TEMP_DIR is undefined
+                    $tmp = defined('APP_TEMP_DIR') ? APP_TEMP_DIR : '/tmp';
                 }
             }
             $user = get_current_user();
@@ -100,6 +101,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function addAssociation($handle, $macFunc, $secret, $expires)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/assoc_' . md5($handle);
         $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
         if ($lock === false) {
@@ -139,6 +141,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function getAssociation($handle, &$macFunc, &$secret, &$expires)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/assoc_' . md5($handle);
         $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
         if ($lock === false) {
@@ -157,6 +160,10 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
             $ret = false;
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($storedHandle, $macFunc, $secret, $expires) = unserialize($data);
                 if ($handle === $storedHandle && $expires > time()) {
                     $ret = true;
@@ -184,6 +191,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function delAssociation($handle)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/assoc_' . md5($handle);
         $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
         if ($lock === false) {
@@ -214,6 +222,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function addUser($id, $password)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/user_' . md5($id);
         $lock = @fopen($this->_dir . '/user.lock', 'w+');
         if ($lock === false) {
@@ -248,6 +257,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function hasUser($id)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/user_' . md5($id);
         $lock = @fopen($this->_dir . '/user.lock', 'w+');
         if ($lock === false) {
@@ -266,6 +276,10 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
             $ret = false;
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($storedId, $storedPassword, $trusted) = unserialize($data);
                 if ($id === $storedId) {
                     $ret = true;
@@ -289,6 +303,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function checkUser($id, $password)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/user_' . md5($id);
         $lock = @fopen($this->_dir . '/user.lock', 'w+');
         if ($lock === false) {
@@ -307,6 +322,10 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
             $ret = false;
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($storedId, $storedPassword, $trusted) = unserialize($data);
                 if ($id === $storedId && $password === $storedPassword) {
                     $ret = true;
@@ -329,6 +348,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function delUser($id)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/user_' . md5($id);
         $lock = @fopen($this->_dir . '/user.lock', 'w+');
         if ($lock === false) {
@@ -357,6 +377,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function getTrustedSites($id)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/user_' . md5($id);
         $lock = @fopen($this->_dir . '/user.lock', 'w+');
         if ($lock === false) {
@@ -375,6 +396,10 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
             $ret = false;
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($storedId, $storedPassword, $trusted) = unserialize($data);
                 if ($id === $storedId) {
                     $ret = $trusted;
@@ -399,6 +424,7 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
      */
     public function addSite($id, $site, $trusted)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/user_' . md5($id);
         $lock = @fopen($this->_dir . '/user.lock', 'w+');
         if ($lock === false) {
@@ -417,6 +443,10 @@ class Zend_OpenId_Provider_Storage_File extends Zend_OpenId_Provider_Storage
             $ret = false;
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($storedId, $storedPassword, $sites) = unserialize($data);
                 if ($id === $storedId) {
                     if ($trusted === null) {

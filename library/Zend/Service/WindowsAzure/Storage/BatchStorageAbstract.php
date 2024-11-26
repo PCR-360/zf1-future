@@ -101,8 +101,12 @@ abstract class Zend_Service_WindowsAzure_Storage_BatchStorageAbstract
 	 */
     public function performBatch($operations = [], $forTableStorage = false, $isSingleSelect = false, $resourceType = Zend_Service_WindowsAzure_Storage::RESOURCE_UNKNOWN, $requiredPermission = Zend_Service_WindowsAzure_Credentials_CredentialsAbstract::PERMISSION_READ)
 	{
-	    // Generate boundaries
+        /*
+         * Generate boundaries
+         * md5() usage is safe -- only used to create unique identifier.
+         */
 	    $batchBoundary = 'batch_' . md5(time() . microtime());
+        // md5() usage is safe -- only used to create unique identifier.
 	    $changesetBoundary = 'changeset_' . md5(time() . microtime());
 
 	    // Set headers

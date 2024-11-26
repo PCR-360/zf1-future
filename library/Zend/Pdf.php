@@ -384,6 +384,8 @@ class Zend_Pdf
 
             /**
              * Document id
+             *
+             * md5() usage is safe -- only used to create unique identifier.
              */
             $docId = md5(uniqid(rand(), true));   // 32 byte (128 bit) identifier
             $docIdLow  = substr($docId,  0, 16);  // first 16 bytes

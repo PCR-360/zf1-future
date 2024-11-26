@@ -58,7 +58,8 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
             if (empty($tmp)) {
                 $tmp = getenv('TEMP');
                 if (empty($tmp)) {
-                    $tmp = "/tmp";
+                    // Only use /tmp if APP_TEMP_DIR is undefined
+                    $tmp = defined('APP_TEMP_DIR') ? APP_TEMP_DIR : '/tmp';
                 }
             }
             $user = get_current_user();
@@ -123,7 +124,9 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
      */
     public function addAssociation($url, $handle, $macFunc, $secret, $expires)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name1 = $this->_dir . '/assoc_url_' . md5($url);
+        // md5() usage is safe -- only used to create unique identifier.
         $name2 = $this->_dir . '/assoc_handle_' . md5($handle);
         $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
         if ($lock === false) {
@@ -181,6 +184,7 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
      */
     public function getAssociation($url, &$handle, &$macFunc, &$secret, &$expires)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name1 = $this->_dir . '/assoc_url_' . md5($url);
         $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
         if ($lock === false) {
@@ -199,10 +203,15 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
             $ret = false;
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($storedUrl, $handle, $macFunc, $secret, $expires) = unserialize($data);
                 if ($url === $storedUrl && $expires > time()) {
                     $ret = true;
                 } else {
+                    // md5() usage is safe -- only used to create unique identifier.
                     $name2 = $this->_dir . '/assoc_handle_' . md5($handle);
                     fclose($f);
                     @unlink($name2);
@@ -234,6 +243,7 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
      */
     public function getAssociationByHandle($handle, &$url, &$macFunc, &$secret, &$expires)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name2 = $this->_dir . '/assoc_handle_' . md5($handle);
         $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
         if ($lock === false) {
@@ -252,12 +262,17 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
             $ret = false;
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($url, $storedHandle, $macFunc, $secret, $expires) = unserialize($data);
                 if ($handle === $storedHandle && $expires > time()) {
                     $ret = true;
                 } else {
                     fclose($f);
                     @unlink($name2);
+                    // md5() usage is safe -- only used to create unique identifier.
                     $name1 = $this->_dir . '/assoc_url_' . md5($url);
                     @unlink($name1);
                     fclose($lock);
@@ -281,6 +296,7 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
      */
     public function delAssociation($url)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name1 = $this->_dir . '/assoc_url_' . md5($url);
         $lock = @fopen($this->_dir . '/assoc.lock', 'w+');
         if ($lock === false) {
@@ -298,8 +314,13 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
             }
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($storedUrl, $handle, $macFunc, $secret, $expires) = unserialize($data);
                 if ($url === $storedUrl) {
+                    // md5() usage is safe -- only used to create unique identifier.
                     $name2 = $this->_dir . '/assoc_handle_' . md5($handle);
                     fclose($f);
                     @unlink($name2);
@@ -329,6 +350,7 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
      */
     public function addDiscoveryInfo($id, $realId, $server, $version, $expires)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/discovery_' . md5($id);
         $lock = @fopen($this->_dir . '/discovery.lock', 'w+');
         if ($lock === false) {
@@ -368,6 +390,7 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
      */
     public function getDiscoveryInfo($id, &$realId, &$server, &$version, &$expires)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/discovery_' . md5($id);
         $lock = @fopen($this->_dir . '/discovery.lock', 'w+');
         if ($lock === false) {
@@ -386,6 +409,10 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
             $ret = false;
             $data = stream_get_contents($f);
             if (!empty($data)) {
+                /*
+                 * Code analysis may flag this as "Deserialization of Untrusted Data"
+                 * Entire class is unused by PCR-360.
+                 */
                 list($storedId, $realId, $server, $version, $expires) = unserialize($data);
                 if ($id === $storedId && $expires > time()) {
                     $ret = true;
@@ -413,6 +440,7 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
      */
     public function delDiscoveryInfo($id)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/discovery_' . md5($id);
         $lock = @fopen($this->_dir . '/discovery.lock', 'w+');
         if ($lock === false) {
@@ -441,6 +469,7 @@ class Zend_OpenId_Consumer_Storage_File extends Zend_OpenId_Consumer_Storage
      */
     public function isUniqueNonce($provider, $nonce)
     {
+        // md5() usage is safe -- only used to create unique identifier.
         $name = $this->_dir . '/nonce_' . md5($provider.';'.$nonce);
         $lock = @fopen($this->_dir . '/nonce.lock', 'w+');
         if ($lock === false) {

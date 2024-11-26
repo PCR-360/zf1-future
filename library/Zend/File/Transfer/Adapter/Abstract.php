@@ -1383,7 +1383,8 @@ abstract class Zend_File_Transfer_Adapter_Abstract
         if (null === $this->_tmpDir) {
             $tmpdir = [];
             if (function_exists('sys_get_temp_dir')) {
-                $tmpdir[] = sys_get_temp_dir();
+                // Only use sys_get_temp_dir() if APP_TEMP_DIR is undefined
+                $tmpdir[] = defined('APP_TEMP_DIR') ? APP_TEMP_DIR : sys_get_temp_dir();
             }
 
             if (!empty($_ENV['TMP'])) {
@@ -1410,7 +1411,10 @@ abstract class Zend_File_Transfer_Adapter_Abstract
             }
 
             if (empty($this->_tmpDir)) {
-                // Attemp to detect by creating a temporary file
+                /*
+                 * Attempt to detect by creating a temporary file
+                 * md5() usage is safe -- only used to create unique identifier.
+                 */
                 $tempFile = tempnam(md5(uniqid(rand(), TRUE)), '');
                 if ($tempFile) {
                     $this->_tmpDir = realpath(dirname($tempFile));

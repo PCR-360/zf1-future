@@ -987,8 +987,13 @@ class Zend_Http_Client
         $this->_stream_name = $this->config['output_stream'];
         if(!is_string($this->_stream_name)) {
             // If name is not given, create temp name
-            $this->_stream_name = tempnam(isset($this->config['stream_tmp_dir'])?$this->config['stream_tmp_dir']:sys_get_temp_dir(),
-                 'Zend_Http_Client');
+            $this->_stream_name = tempnam(
+                $this->config['stream_tmp_dir'] ?? (
+                    // Only use sys_get_temp_dir() if APP_TEMP_DIR is undefined
+                    defined('APP_TEMP_DIR') ? APP_TEMP_DIR : sys_get_temp_dir()
+                ),
+                'Zend_Http_Client'
+            );
         }
 
         if (false === ($fp = @fopen($this->_stream_name, "w+b"))) {
@@ -1296,7 +1301,10 @@ class Zend_Http_Client
         if (count($this->paramsPost) > 0 || count($this->files) > 0) {
             switch($this->enctype) {
                 case self::ENC_FORMDATA:
-                    // Encode body as multipart/form-data
+                    /*
+                     * Encode body as multipart/form-data
+                     * md5() usage is safe -- only used to create unique identifier.
+                     */
                     $boundary = '---ZENDHTTPCLIENT-' . md5(microtime());
                     $this->setHeaders(self::CONTENT_TYPE, self::ENC_FORMDATA . "; boundary={$boundary}");
 

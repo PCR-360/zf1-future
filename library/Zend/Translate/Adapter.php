@@ -629,6 +629,7 @@ abstract class Zend_Translate_Adapter {
 
         $read = true;
         if (isset(self::$_cache)) {
+            // md5() usage is safe -- only used to create unique identifier.
             $id = 'Zend_Translate_' . md5(serialize($options['content'])) . '_' . $this->toString();
             $temp = self::$_cache->load($id);
             if ($temp) {
@@ -676,6 +677,7 @@ abstract class Zend_Translate_Adapter {
         }
 
         if (($read) && (isset(self::$_cache))) {
+            // md5() usage is safe -- only used to create unique identifier.
             $id = 'Zend_Translate_' . md5(serialize($options['content'])) . '_' . $this->toString();
             if (self::$_cacheTags) {
                 self::$_cache->save($temp, $id, [$this->_options['tag']]);
