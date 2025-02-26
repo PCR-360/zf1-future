@@ -256,9 +256,6 @@ abstract class Zend_Feed_Pubsubhubbub_CallbackAbstract
      */
     protected function _getHttpHost()
     {
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            return $_SERVER['HTTP_HOST'];
-        }
         $scheme = 'http';
 
         if ($_SERVER['HTTPS'] == 'on') {
