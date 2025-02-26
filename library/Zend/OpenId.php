@@ -98,17 +98,7 @@ class Zend_OpenId
         }
         $url = '';
         $port = '';
-        if (isset($_SERVER['HTTP_HOST'])) {
-            if (($pos = strpos($_SERVER['HTTP_HOST'], ':')) === false) {
-                if (isset($_SERVER['SERVER_PORT'])) {
-                    $port = ':' . $_SERVER['SERVER_PORT'];
-                }
-                $url = $_SERVER['HTTP_HOST'];
-            } else {
-                $url = substr($_SERVER['HTTP_HOST'], 0, $pos);
-                $port = substr($_SERVER['HTTP_HOST'], $pos);
-            }
-        } else if (isset($_SERVER['SERVER_NAME'])) {
+        if (isset($_SERVER['SERVER_NAME'])) {
             $url = $_SERVER['SERVER_NAME'];
             if (isset($_SERVER['SERVER_PORT'])) {
                 $port = ':' . $_SERVER['SERVER_PORT'];
