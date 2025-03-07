@@ -210,15 +210,12 @@ class Zend_Controller_Action_Helper_Redirector extends Zend_Controller_Action_He
     protected function _redirect($url)
     {
         if ($this->getUseAbsoluteUri() && !preg_match('#^(https?|ftp)://#', $url)) {
-            $host  = (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
+            $host  = (isset($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:'');
             $proto = (isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=="off") ? 'https' : 'http';
             $port  = (isset($_SERVER['SERVER_PORT'])?$_SERVER['SERVER_PORT']:80);
             $uri   = $proto . '://' . $host;
             if ((('http' == $proto) && (80 != $port)) || (('https' == $proto) && (443 != $port))) {
-                // do not append if HTTP_HOST already contains port
-                if (strrchr($host, ':') === false) {
-                    $uri .= ':' . $port;
-                }
+                $uri .= ':' . $port;
             }
             $url = $uri . '/' . ltrim($url, '/');
         }
