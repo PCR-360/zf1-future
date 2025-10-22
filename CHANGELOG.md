@@ -6,6 +6,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [25.2.0] - 2025-10-22
+
+### Added
+* Merged latest changes from Shardj/zf1-future (v1.24.4)
+* feat: Support for OS/2 table v4 by @wex in https://github.com/Shardj/zf1-future/pull/493
+* Adds Straight Join to Zend_Db_Select by @kazsaj in https://github.com/Shardj/zf1-future/pull/497
+
+### Fixed
+* Declare dynamic property to avoid error in PHP8.4 when Session is started by @vuvanly in https://github.com/Shardj/zf1-future/pull/496
+* Fix Zend_Pdf_Element regression by added $value prop by @onlime in https://github.com/Shardj/zf1-future/pull/490
+* Update fgetcsv call to specify $escape parameter due to deprecation by @DrRago in https://github.com/Shardj/zf1-future/pull/498
+* Fix object caching in Zend_Translate_Adapter by @onelab in https://github.com/Shardj/zf1-future/pull/504
+* Fix parameter type in PHPDoc by @holtkamp in https://github.com/Shardj/zf1-future/pull/503
+
+## [24.2.3] - 2025-03-17
+
+### Fixed
+* PCR360-11708: Replace all instances of HTTP_HOST with SERVER_NAME
+  - Eliminates HTTP_HOST usage in: Zend_Soap_AutoDiscover::getHostName, Zend_Feed_Pubsubhubbub_CallbackAbstract::_getHttpHost, Zend_Controller_Request_Http::getHttpHost, Zend_OpenId::selfUrl, Zend_Controller_Action_Helper_Redirector::_redirect, and Zend_View_Helper_ServerUrl::__construct
+  - Expected value is rebuilt instead using SERVER_NAME and SERVER_PORT
+
+## [24.2.2] - 2024-11-26
+
+### Fixed
+* PCR360-11597: PHP8 OCI Lob class changes
+* PCR360-11508: Zend Futures usage of Zend Json to encode grid data causing deprecated errors on indexed grid in PHP 8.3
+* PCR360-11527: Investigate Changes to ZF from GIT history
+* PCR360-11526: Temp files should only be created in /tmp when APP_TEMP_DIR is undefined
+
+## [24.2.1] - 2024-09-04
+
+### Fixed
+* PCR360-11508: Correct post composer switchover issues
+
+## [24.2.0] - 2024-06-12
+
+### Added
+* PCR360-11213: PHP 8.3 support
+
 ## [1.24.4] - 2025-06-26
 
 ### Added
