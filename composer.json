@@ -2,7 +2,7 @@
     "name": "pcr/zf1-future",
     "description": "Zend Framework 1. The aim is to keep ZF1 working with the latest PHP versions",
     "type": "library",
-    "version": "24.2.3",
+    "version": "26.1.0",
     "keywords": [
         "framework",
         "zf1"
@@ -10,7 +10,7 @@
     "homepage": "https://github.com/Shardj/zf1-future/",
     "license": "BSD-3-Clause",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.3",
         "symfony/polyfill-ctype": "^1.30",
         "symfony/polyfill-mbstring": "^1.30",
         "symfony/polyfill-php81": "^1.30",
@@ -54,9 +54,6 @@
         "branch-alias": {
             "dev-bugfix/PCR360-11526": "24.2.x-dev"
         }
-    },
-    "config": {
-        "bin-dir": "bin"
     },
     "archive": {
         "exclude": ["/demos", "/documentation", "/tests"]
